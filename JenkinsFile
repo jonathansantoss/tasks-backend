@@ -6,5 +6,10 @@ pipeline {
                 sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package -DskipTests=true'
             }
         }
+        stages ('Unit Tests') {
+            steps {
+                sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+            }
+        }
     }
 }
