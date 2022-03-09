@@ -8,7 +8,7 @@ pipeline {
         }
         stage ('Unit Tests') {
             steps {
-                bat '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+                bat 'mvn test'
             }
         }
         stage ('Sonar Analysis') {
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('api-test') {
                     git 'https://github.com/jonathansantoss/tasks-api-test'
-                    bat '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+                    bat 'mvn test'
                 }
             }
         }
