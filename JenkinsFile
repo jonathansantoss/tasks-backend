@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('Build Backend') {
             steps {
-                sh 'mvn clean package -DskipTests=true'
+                sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package -DskipTests=true'
             }
         }
         stage ('Unit Tests') {
