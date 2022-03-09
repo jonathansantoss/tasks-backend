@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    { dockerfile true }
     stages {
         stage ('Build Backend') {
             steps {
@@ -49,11 +49,6 @@ pipeline {
                     sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package'
                     deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
-            }
-        }
-        stage ('Build Tomcat') {
-            steps {
-                agent { dockerfile true }
             }
         }
     }
