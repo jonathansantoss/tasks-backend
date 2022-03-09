@@ -52,7 +52,9 @@ pipeline {
             }
         }
         stage ('Build Tomcat') {
-            agent { dockerfile true }
+            steps {
+                agent { dockerfile true }
+            }
         }
     }
 }
