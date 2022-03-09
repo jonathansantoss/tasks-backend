@@ -51,5 +51,13 @@ pipeline {
                 }
             }
         }
+        stage ('Functional Test') {
+            steps {
+                dir('functional-test') {
+                    git 'https://github.com/jonathansantoss/tasks-functional-tests'
+                    sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+                }
+            }
+        }
     }
 }
