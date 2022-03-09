@@ -51,5 +51,10 @@ pipeline {
                 }
             }
         }
+        stage ('Tomcat') {
+            steps {
+                dockerFingerprintFrom dockerfile: 'Dockerfile', image: 'tomcat:9.0.56-jdk17-openjdk', toolName: 'DOCKER_LOCAL'
+            }
+        }
     }
 }
