@@ -6,55 +6,55 @@ pipeline {
                 bat 'mvn clean package -DskipTests=true'
             }
         }
-        stage ('Unit Tests') {
-            steps {
-                bat 'mvn test'
-            }
-        }
-        stage ('Sonar Analysis') {
-            environment {
-                scannerHome = tool 'SONAR_SCANNER'
-            }
-            steps {
-                withSonarQubeEnv('SONAR_TESTE') {
-                    bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://192.168.0.104:9000 -Dsonar.login=5f78460d2c51f68329a182f38f028181741bab64 -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
-                }
-            }
-        }
-        stage ('Quality Gate') {
-            steps {
-                sleep(5)
-                timeout(time: 1, unit: 'MINUTES'){
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-        stage ('Deploy Backend') {
-            steps {
-                deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
-            }
-        }
-        stage ('API TEST') {
-            steps {
-                dir('api-test') {
-                    git 'https://github.com/jonathansantoss/tasks-api-test'
-                    bat 'mvn test'
-                }
-            }
-        }
-        stage ('Deploy Frontend') {
-            steps {
-                dir('frontend') {
-                    git 'https://github.com/jonathansantoss/tasks-frontend'
-                    bat '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package'
-                    deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks', war: 'target/tasks.war'
-                }
-            }
-        }
-        stage ('Deploy Prod') {
-            steps {
-                bat 'docker-compose build'
-            }
-        }
+        // stage ('Unit Tests') {
+        //     steps {
+        //         bat 'mvn test'
+        //     }
+        // }
+        // stage ('Sonar Analysis') {
+        //     environment {
+        //         scannerHome = tool 'SONAR_SCANNER'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('SONAR_TESTE') {
+        //             bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://192.168.0.104:9000 -Dsonar.login=5f78460d2c51f68329a182f38f028181741bab64 -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
+        //         }
+        //     }
+        // }
+        // stage ('Quality Gate') {
+        //     steps {
+        //         sleep(5)
+        //         timeout(time: 1, unit: 'MINUTES'){
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+        // stage ('Deploy Backend') {
+        //     steps {
+        //         deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
+        //     }
+        // }
+        // stage ('API TEST') {
+        //     steps {
+        //         dir('api-test') {
+        //             git 'https://github.com/jonathansantoss/tasks-api-test'
+        //             bat 'mvn test'
+        //         }
+        //     }
+        // }
+        // stage ('Deploy Frontend') {
+        //     steps {
+        //         dir('frontend') {
+        //             git 'https://github.com/jonathansantoss/tasks-frontend'
+        //             bat '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package'
+        //             deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks', war: 'target/tasks.war'
+        //         }
+        //     }
+        // }
+        // stage ('Deploy Prod') {
+        //     steps {
+        //         bat 'docker-compose build'
+        //     }
+        // }
     }
 }
