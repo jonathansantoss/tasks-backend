@@ -46,7 +46,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     git 'https://github.com/jonathansantoss/tasks-frontend'
-                    bat '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package'
+                    bat 'mvn clean package'
                     deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
