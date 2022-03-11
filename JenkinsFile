@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker 'maven:3.8.4-openjdk-11' }
+    agent { docker 'maven:3.8.1-adoptopenjdk-11' }
     stages {
         stage ('Build Backend') {
             steps {
