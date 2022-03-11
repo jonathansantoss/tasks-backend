@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage ('Build Backend') {
             steps {
-                sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package -DskipTests=true'
+                bat 'mvn clean package -DskipTests=true'
             }
         }
         stage ('Unit Tests') {
             steps {
-                sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+                bat 'mvn test'
             }
         }
         stage ('Sonar Analysis') {
@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SONAR_TESTE') {
-                    sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://192.168.0.104:9000 -Dsonar.login=95bac1ced9b2641fefcdb88e3aefb7dfb7762576 -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
+                    bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://192.168.0.104:9000 -Dsonar.login=e115d3c36dd97f77d4979a0fc452fe065efa6574  -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 dir('api-test') {
                     git 'https://github.com/jonathansantoss/tasks-api-test'
-                    sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn test'
+                    bat 'mvn test'
                 }
             }
         }
@@ -46,14 +46,15 @@ pipeline {
             steps {
                 dir('frontend') {
                     git 'https://github.com/jonathansantoss/tasks-frontend'
-                    sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/MAVEN/bin/mvn clean package'
+                    bat 'mvn clean package'
                     deploy adapters: [tomcat9(credentialsId: 'TomcatLogin', path: '', url: 'http://192.168.0.104:8002/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
         }
         stage ('Deploy Prod') {
             steps {
-                step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker-compose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+                bat 'docker-compose build'
+                bat 'docker-compose up -d'
             }
         }
     }
